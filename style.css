@@ -31,6 +31,8 @@ body {
     display: flex;
     gap: 20px;
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .navBar a {
@@ -44,7 +46,9 @@ body {
 }
 
 .allLinks {
-    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .cartLink {
