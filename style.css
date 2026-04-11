@@ -50,11 +50,11 @@ body {
     border-radius: 10px;
     font-size: 24px;
     font-weight: 400;
+    text-align: center;
 }
 
 .cartLink a {
     color: #081C15;
-    text-align: center;
 }
 
 footer {
