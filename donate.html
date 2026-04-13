@@ -62,7 +62,7 @@
             width: 60%;
             text-align: center;
         }
-        
+
     </style>
 </head>
 <body>
@@ -101,10 +101,10 @@
                     <!-- Autofill form container-->
                     <div class="autofill">
                         <h3>Autofill</h3>
-                        <form>
+                        <form onsubmit="loadBookDetails(event); return false;">
                             <div class="field-container">
                                 <label for="isbn">ISBN</label>
-                                <input name="isbn" type="number">
+                                <input id="isbn-input" name="isbn" type="number">
                             </div>
                             <!-- The submit button is a search icon -->
                             <input type="submit" value="">
@@ -113,11 +113,12 @@
                     <!-- End of autofill container -->
                 <form>
                     <label for="title">Title</label>
-                    <input name="title" type="text">
+                    <input id="title-input" name="title" type="text">
                     <label for="author">Author</label>
-                    <input name="author" type="text">
+                    <input id="author-input" name="author" type="text">
                     <input type="submit" value="Submit">
                 </form>
+                <div id="result"></div>
             </div>
             <!-- End of form container -->
         </div>
@@ -133,4 +134,39 @@
         </div>
     </footer>
 </body>
+<script>
+    function loadBookDetails(event) {
+
+        if (event) event.preventDefault();
+
+        // Reset the search results
+        document.getElementById("result").innerHTML = "";
+
+        // Get the ISBN and fields to fill
+        const isbn = document.getElementById("isbn-input").value;
+        const titleField = document.getElementById("title-input");
+        const authorField = document.getElementById("author-input");
+
+        // Make the url
+        const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+
+        // Get search results
+        fetch(url)
+        .then (res => res.text())
+        .then (response => {
+            // Parse the JSON
+            data = JSON.parse(response);
+            // console.log(data);
+            // Show the data
+            if (data != null) {
+                titleField.value = data["items"]["0"].volumeInfo.title;
+                authorField.value = data["items"]["0"].volumeInfo.authors[0];
+            }
+
+        })
+        // Catch any errors
+        .catch (error => console.log(error));
+    } // End of loadBookDetails function
+
+</script>
 </html>
