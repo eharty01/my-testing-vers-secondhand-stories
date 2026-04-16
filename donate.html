@@ -51,6 +51,13 @@
             margin: 10px 0;
         }
 
+        .fields {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+        }
+
         .field-container {
             display: flex;
             flex-direction: column;
@@ -103,37 +110,32 @@
                 details manually or use our built in ISBN autofill feature to
                 save time.</p>
             <div class="form-container">
-                <form>
-                    <h2>Personal Information</h2>
-                    <label for="firstName">First Name</label>
-                    <input id="firstName-input" name="firstName" type="text" required>
-                    <label for="lastName">Last Name</label>
-                    <input id="lastName-input" name="lastName" type="text" required>
-                    <label for="honorifics">Honorifics</label>
-                    <input id="honorifics-input" name="honorifics" type="text">
-                    <h2>Book Details</h2>
-                    <!-- Autofill form container-->
-                    <div class="autofill">
-                        <h3>Autofill</h3>
-                        <form onsubmit="loadBookDetails(event); return false;">
+                <!-- Autofill form container-->
+                <div class="autofill">
+                    <h3>Autofill</h3>
+                    <form onsubmit="loadBookDetails(event); return false;">
+                        <div class="fields">
                             <div class="field-container">
                                 <label for="title">Title</label>
-                                <input id="isbn-input" name="isbn" type="number">
+                                <input id="title-input" name="title" type="text">
+                            </div>
+                            <div class="field-container">
                                 <label for="isbn">ISBN</label>
                                 <input id="isbn-input" name="isbn" type="number">
                             </div>
-                            <!-- The submit button is a search icon -->
-                            <input type="submit" value="">
-                        </form>
-                    </div>
-                    <!-- End of autofill container -->
+                        </div>
+                        <!-- The submit button is a search icon -->
+                        <input type="submit" value="">
+                    </form>
+                </div>
+                <!-- End of autofill container -->
+
+                <form>
                 <!--prev form tag-->
                     <label for="title">Title</label>
-                    <input id="title-input" name="title" type="text">
+                    <input id="title" name="title" type="text">
                     <label for="author">Author</label>
-                    <input id="author-input" name="author" type="text">
-                    <label for="genre">Genre</label>
-                    <input id="genre-input" name="genre" type="text">
+                    <input id="author" name="author" type="text">
                     <input type="submit" value="Submit">
                 </form>
                 <div id="result"></div>
@@ -155,18 +157,28 @@
 <script>
     function loadBookDetails(event) {
 
-        if (event) event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
 
         // Reset the search results
         document.getElementById("result").innerHTML = "";
 
         // Get the ISBN and fields to fill
         const isbn = document.getElementById("isbn-input").value;
-        const titleField = document.getElementById("title-input");
-        const authorField = document.getElementById("author-input");
+        const title = document.getElementById("title-input").value;
+        const titleField = document.getElementById("title");
+        const authorField = document.getElementById("author");
+
+        var url;
 
         // Make the url
-        const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+        if (isbn) {
+            url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyDJV8TYoGmFA0aNY2wQ-NVyMIiTtIhjMiQ`;
+        }
+        else if (title) {
+            url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&key=AIzaSyDJV8TYoGmFA0aNY2wQ-NVyMIiTtIhjMiQ`;
+        }
 
         // Get search results
         fetch(url)
@@ -174,14 +186,14 @@
         .then (response => {
             // Parse the JSON
             data = JSON.parse(response);
-            // console.log(data);
+            console.log(JSON.stringify(data));
             // Show the data
             if (data["items"]) {
                 titleField.value = data["items"]["0"].volumeInfo.title;
                 authorField.value = data["items"]["0"].volumeInfo.authors[0];
             }
             else {
-                alert("No books found matching that ISBN");
+                alert("No books found");
             }
 
         })
