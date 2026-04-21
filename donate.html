@@ -2,7 +2,7 @@
 <html lang="en">
 <html>
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="keywords" content="secondhand books, affordable books, book donations, global literacy, sustainability" />
     <meta name="description" content="Support Secondhand Stories by donating books and helping to promote global literacy." />
@@ -13,15 +13,83 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
   <style></style>
+<head>
+    <title>Donate</title>
+    <link rel="stylesheet" href="style.css">
+    <style type="text/css">
+        .autofill {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            background-color: #1B4332;
+            border-radius: 10px;
+            width: 80%;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .autofill form {
+            display: flex; 
+            flex-direction: row;
+            justify-content: flex-start; 
+            align-items: flex-end;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .autofill h3 {
+            color: #E9EED9;
+            margin: 10px 0;
+        }
+
+        .autofill form label {
+            color: #E9EED9;
+        }
+
+        .autofill input {
+            width: 100%;
+        }
+
+        .autofill input[type="submit"] {
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            border-radius: 100px;
+            background-image: url("./images/magnifier-glass-icon.png");
+            background-size: 20px;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .field-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            flex: 1;
+        }
+
+        p {
+            width: 60%;
+            text-align: center;
+        }
+
+    </style>
+</head>
 <body>
+    <!-- Navigation bar -->
     <nav class="navBar">
+        <!-- Logo and brand name -->
         <a href="index.html" class="brandName">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24">
                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6v13m9-13v13m9-13v13" />
             </svg>
             <h1>Secondhand Stories</h1>
         </a>
-    
+
+        <!-- Actual navigation -->
         <div class="allLinks">
             <a class="cartLink" href="cart.html"><button>Cart</button></a>
             <ul class="navLinks">
@@ -32,10 +100,44 @@
             </ul>
         </div>
     </nav>
+    <!-- End of navigation bar -->
 
     <div class="content">
-        
+        <div class="page-center-container">
+            <h1>Donate</h1>
+            <p>Don't let your old books collect dust on your shelves! Fill out
+               the information below to donate your books. You may enter Book
+                details manually or use our built in ISBN autofill feature to
+                save time.</p>
+            <div class="form-container">
+                    <h2>Book Details</h2>
+                    <!-- Autofill form container-->
+                    <div class="autofill">
+                        <h3>Autofill</h3>
+                        <form onsubmit="loadBookDetails(event); return false;">
+                            <div class="field-container">
+                                <label for="isbn">ISBN</label>
+                                <input id="isbn-input" name="isbn" type="number">
+                            </div>
+                            <!-- The submit button is a search icon -->
+                            <input type="submit" value="">
+                        </form>
+                    </div>
+                    <!-- End of autofill container -->
+                <form>
+                    <label for="title">Title</label>
+                    <input id="title-input" name="title" type="text">
+                    <label for="author">Author</label>
+                    <input id="author-input" name="author" type="text">
+                    <input type="submit" value="Submit">
+                </form>
+                <div id="result"></div>
+            </div>
+            <!-- End of form container -->
+        </div>
+        <!-- End of centered page -->
     </div>
+    <!-- End of content -->
 
      <footer>
         <div>2026 Secondhand Stories. All rights reserved. | </div>
@@ -45,4 +147,39 @@
         </div>
     </footer>
 </body>
+<script>
+    function loadBookDetails(event) {
+
+        if (event) event.preventDefault();
+
+        // Reset the search results
+        document.getElementById("result").innerHTML = "";
+
+        // Get the ISBN and fields to fill
+        const isbn = document.getElementById("isbn-input").value;
+        const titleField = document.getElementById("title-input");
+        const authorField = document.getElementById("author-input");
+
+        // Make the url
+        const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+
+        // Get search results
+        fetch(url)
+        .then (res => res.text())
+        .then (response => {
+            // Parse the JSON
+            data = JSON.parse(response);
+            // console.log(data);
+            // Show the data
+            if (data != null) {
+                titleField.value = data["items"]["0"].volumeInfo.title;
+                authorField.value = data["items"]["0"].volumeInfo.authors[0];
+            }
+
+        })
+        // Catch any errors
+        .catch (error => console.log(error));
+    } // End of loadBookDetails function
+
+</script>
 </html>

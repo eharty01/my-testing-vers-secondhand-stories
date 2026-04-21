@@ -9,6 +9,7 @@
     <title>Cart</title>
     <link rel="stylesheet" href="style.css">
   <style>
+    
     .order-summary-card {
             background: #ffffff;
             border-radius: 12px;
@@ -103,16 +104,32 @@
     <div class="content">
         <div class="section">
             <h2>Cart</h2>
-            <div class="description">
+            <div class="subtitle">
                 Finalizing your collection...you’re just a few clicks away from owning these books!
             </div>
             <div class="order-summary-card">
-                <h3>Order Summary</h3>
-                <p>Subtotal: $XX.XX</p>
-                <p>Shipping: $X.XX</p>
-                <p>Total: $XX.XX</p>
+
+            <div class="order-lines">
+                <div class="order-line">
+                    <span>Subtotal:</span>
+                    <span>$XX.XX</span>
+                </div>
+                <div class="order-line">
+                    <span>Shipping:</span>
+                    <span>$XX.XX</span>
+                </div>
+                <div class="order-line">
+                    <span>Tax:</span>
+                    <span>$XX.XX</span>
+                </div>
+            </div>
+            <hr class="order-divider" />
+            
+
+            <div class=" confirm-btn-wrapper">
                 <a href="index.html"><button>Checkout</button></a> 
-                <!-- just for now -->
+                <!-- just for now --></div>
+            
         </div>
     </div>
 
