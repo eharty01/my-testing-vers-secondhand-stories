@@ -9,7 +9,24 @@
     <title>Cart</title>
     <link rel="stylesheet" href="style.css">
   <style>
-    
+
+    .cart-page {
+            background: #E9EED9;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 60px;
+        }
+
+    .cart-subtitle {
+        font-family: 'Trebuchet MS', Arial, sans-serif;
+        font-size: 16px;
+        color: #1B4332;
+        text-align: center;
+        margin: 0 0 36px;
+    }
+ 
     .order-summary-card {
             background: #ffffff;
             border-radius: 12px;
@@ -102,12 +119,14 @@
     </nav>
 
     <div class="content">
-        <div class="section">
+        <div class="cart-page">
             <h2>Cart</h2>
-            <div class="subtitle">
+            <div class="cart-subtitle">
                 Finalizing your collection...you’re just a few clicks away from owning these books!
             </div>
+
             <div class="order-summary-card">
+                <h3>Order Summary</h3>
 
             <div class="order-lines">
                 <div class="order-line">
@@ -115,11 +134,15 @@
                     <span>$XX.XX</span>
                 </div>
                 <div class="order-line">
-                    <span>Shipping:</span>
+                    <span>Volume Discount ():</span>
                     <span>$XX.XX</span>
                 </div>
                 <div class="order-line">
-                    <span>Tax:</span>
+                    <span>Donation Credits ():</span>
+                    <span>$XX.XX</span>
+                </div>
+                <div class="order-line">
+                    <span>Tax (6.25%):</span>
                     <span>$XX.XX</span>
                 </div>
             </div>
