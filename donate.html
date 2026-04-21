@@ -22,6 +22,7 @@
             flex-direction: column;
             align-items: start;
             background-color: #1B4332;
+            color: #E9EED9;
             border-radius: 10px;
             width: 80%;
             padding: 30px;
@@ -60,7 +61,14 @@
             background-position: center;
             background-repeat: no-repeat;
             display: inline-block;
-            margin: 10px 0;
+            margin: 10px 0 0 0;
+        }
+
+        .fields {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
         }
 
         .field-container {
@@ -76,13 +84,45 @@
             text-align: center;
         }
 
+        .form-container label {
+            display: block;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+
+            form {
+                width: 90%;
+            }
+            
+            .fields {
+                flex-direction: column;
+            }
+
+            .autofill form {
+                flex-direction: column;
+            }
+
+            .autofill {
+                width: 90%;
+            }
+
+            .autofill input[type="submit"] {
+                width: 100%;
+                border-radius: 20px;
+                background-size: 20px;
+                display: block;
+                margin: 10px auto;
+            }
+        }
+
     </style>
 </head>
 <body>
     <!-- Navigation bar -->
     <nav class="navBar">
         <!-- Logo and brand name -->
-        <a href="index.html" class="brandName">
+        <a href="home" class="brandName">
             <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24">
                 <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0M3 6v13m9-13v13m9-13v13" />
             </svg>
@@ -91,12 +131,12 @@
 
         <!-- Actual navigation -->
         <div class="allLinks">
-            <a class="cartLink" href="cart.html"><button>Cart</button></a>
+            <a class="cartLink" href="cart"><button>Cart</button></a>
             <ul class="navLinks">
-                <li><a href="about.html">About</a></li>
-                <li><a href="catalog.html">Catalog</a></li>
-                <li><a href="donate.html">Donate</a></li>
-                <li><a href="leaderboard.html">Leaderboard</a></li>
+                <li><a href="about">About</a></li>
+                <li><a href="catalog">Catalog</a></li>
+                <li><a href="donate">Donate</a></li>
+                <li><a href="leaderboard">Leaderboard</a></li>
             </ul>
         </div>
     </nav>
@@ -110,25 +150,32 @@
                 details manually or use our built in ISBN autofill feature to
                 save time.</p>
             <div class="form-container">
-                    <h2>Book Details</h2>
-                    <!-- Autofill form container-->
-                    <div class="autofill">
-                        <h3>Autofill</h3>
-                        <form onsubmit="loadBookDetails(event); return false;">
+                <!-- Autofill form container-->
+                <div class="autofill">
+                    <h3>Autofill</h3>
+                    <form onsubmit="loadBookDetails(event); return false;">
+                        <div class="fields">
+                            <div class="field-container">
+                                <label for="title">Title</label>
+                                <input id="title-input" name="title" type="text">
+                            </div>
                             <div class="field-container">
                                 <label for="isbn">ISBN</label>
                                 <input id="isbn-input" name="isbn" type="number">
                             </div>
-                            <!-- The submit button is a search icon -->
-                            <input type="submit" value="">
-                        </form>
-                    </div>
-                    <!-- End of autofill container -->
+                        </div>
+                        <!-- The submit button is a search icon -->
+                        <input type="submit" value="">
+                    </form>
+                </div>
+                <!-- End of autofill container -->
+
                 <form>
+                <!--prev form tag-->
                     <label for="title">Title</label>
-                    <input id="title-input" name="title" type="text">
+                    <input id="title" name="title" type="text">
                     <label for="author">Author</label>
-                    <input id="author-input" name="author" type="text">
+                    <input id="author" name="author" type="text">
                     <input type="submit" value="Submit">
                 </form>
                 <div id="result"></div>
@@ -140,28 +187,38 @@
     <!-- End of content -->
 
      <footer>
-        <div>2026 Secondhand Stories. All rights reserved. | </div>
+        <div>&copy; 2026 Secondhand Stories. All rights reserved. | </div>
         <div>
-            <a href="privacyPolicy.html">Privacy Policy</a> |
-            <a href="termsOfService.html">Terms of Service</a>
+            <a href="privacy-policy">Privacy Policy</a> |
+            <a href="terms-of-service">Terms of Service</a>
         </div>
     </footer>
 </body>
 <script>
     function loadBookDetails(event) {
 
-        if (event) event.preventDefault();
+        if (event) {
+            event.preventDefault();
+        }
 
         // Reset the search results
         document.getElementById("result").innerHTML = "";
 
         // Get the ISBN and fields to fill
         const isbn = document.getElementById("isbn-input").value;
-        const titleField = document.getElementById("title-input");
-        const authorField = document.getElementById("author-input");
+        const title = document.getElementById("title-input").value;
+        const titleField = document.getElementById("title");
+        const authorField = document.getElementById("author");
+
+        var url;
 
         // Make the url
-        const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
+        if (isbn) {
+            url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyDJV8TYoGmFA0aNY2wQ-NVyMIiTtIhjMiQ`;
+        }
+        else if (title) {
+            url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&key=AIzaSyDJV8TYoGmFA0aNY2wQ-NVyMIiTtIhjMiQ`;
+        }
 
         // Get search results
         fetch(url)
@@ -169,11 +226,14 @@
         .then (response => {
             // Parse the JSON
             data = JSON.parse(response);
-            // console.log(data);
+            console.log(JSON.stringify(data));
             // Show the data
-            if (data != null) {
+            if (data["items"]) {
                 titleField.value = data["items"]["0"].volumeInfo.title;
                 authorField.value = data["items"]["0"].volumeInfo.authors[0];
+            }
+            else {
+                alert("No books found");
             }
 
         })

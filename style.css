@@ -325,3 +325,25 @@ input {
     padding: 5px;
 }
 
+@media (max-width: 768px) {
+
+    .form-container {
+        width: 90%;
+    }
+
+    .three-columns {
+        width: 90%;
+        grid-template-columns: 1fr;
+    }
+
+    .two-columns {
+        width: 90%;
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 20px;
+    }
+
+}
+
