@@ -8,6 +8,12 @@ var port = 8080;   // uncomment to run local
 const MongoClient = require('mongodb').MongoClient;
 const connStr = "mongodb+srv://login_user:db123@leaderboard.gw09mzd.mongodb.net/?appName=leaderboard";
 
+var userInfo = 
+    {
+        "first": "",
+        "last": "",
+        "email": ""
+    };
 
 console.log("Server ready");
 
@@ -18,6 +24,7 @@ var server = http.createServer(function (req, res) {
     urlObj = url.parse(req.url, true);
     var path = urlObj.pathname;
 
+    
     // Load the home page
     if (path == "/home") {
         fs.readFile("home.html", function(err, txt) {
@@ -70,7 +77,10 @@ var server = http.createServer(function (req, res) {
 
                 // Search for the user
                 const matchingUser = await collection.findOne({ "email": email, "password": pass });
-                console.log(JSON.stringify(matchingUser));
+                
+                userInfo.first = matchingUser.first;
+                userInfo.last = matchingUser.last;
+                userInfo.email = matchingUser.email;
 
                 if (matchingUser) {
                     // Success! Redirect to home or show success
@@ -137,7 +147,6 @@ var server = http.createServer(function (req, res) {
                 // Check for an existing account
                 if (existingAccount) {
                     res.writeHead(302, { 'Location': '/signup?error=true' });
-                    console.log(JSON.stringify(existingAccount));
                     res.end();
                 }
                 else {
@@ -215,23 +224,20 @@ var server = http.createServer(function (req, res) {
             const title = formData.title;
             const isbn = formData.isbn;
 
-            let url = "";
+            let apiUrl = "";
 
             if (isbn) {
-            url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
+            apiUrl = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
             }
             else if (title) {
-                url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
+                apiUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
             }
             
-            const response = await fetch(url);
+            const response = await fetch(apiUrl);
             const data = await response.json();
-            console.log(JSON.stringify(data));
 
             if (data && data["totalItems"] > 0) {
                 const autofillResult = data["items"][0]["volumeInfo"];
-
-                console.log(JSON.stringify(autofillResult));
                 const autofillTitle = autofillResult.title;
                 const autofillAuthor = autofillResult.authors[0];
 
@@ -273,6 +279,7 @@ var server = http.createServer(function (req, res) {
         });
     }
     else if (path == "/process-donate" && req.method == 'POST') {
+
         // Get the form data
         let body = "";
         // Collect the data
@@ -283,11 +290,64 @@ var server = http.createServer(function (req, res) {
         req.on('end', async () => {
             // Get the form data
             const formData = querystring.parse(body);
-            // Create a new book
-            const newBook = {
-                "title": formData.title,
-                "author": formData.author,
+
+            apiUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${formData.title}&inauthor:${formData.author}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+
+            // Extract book data
+            const bookData = data.items?.[0]?.volumeInfo;
+
+            if (!bookData) {
+                res.writeHead(302, { 'Location': '/donate?error=not_found' });
+                return res.end();
             }
+
+            if (data && data["totalItems"] != 0) {
+                
+                // Create a new book
+                const isbn13 = bookData.industryIdentifiers?.find(id => id.type === "ISBN_13")?.identifier;
+
+                const newBook = {
+                    title: bookData.title || "Unknown Title",
+                    author: bookData.authors?.[0] || "Unknown Author",
+                    year: bookData.publishedDate?.split('-')[0] || "N/A",
+                    genre: bookData.categories?.[0] || "General",
+                    isbn: isbn13 || "N/A"
+                };
+
+                // Connect to MongoDB
+                const client = new MongoClient(connStr);
+                
+                try {
+                    await client.connect();
+                    // Go to this database
+                    const db = client.db("secondhand-db");
+                    // Go to this collection
+                    const collection = db.collection("books");
+                    
+                    // Insert the new book
+                    const result = await collection.insertOne(newBook);
+
+                    // Redirect to login page
+                    res.writeHead(302, { 'Location': '/home' });
+                    res.end();
+                }
+                // Catch any errors that come up
+                catch (err) {
+                    res.writeHead(500);
+                    res.end("Database Error: " + err.message);
+                }
+                finally {
+                    await client.close();
+                }
+            }
+        });
+
+        // Add the donation to the users profile
+        req.on('end', async () => {
+            
             // Connect to MongoDB
             const client = new MongoClient(connStr);
             
@@ -296,14 +356,20 @@ var server = http.createServer(function (req, res) {
                 // Go to this database
                 const db = client.db("secondhand-db");
                 // Go to this collection
-                const collection = db.collection("books");
-                
-                // Insert a new user
-                const result = await collection.insertOne(newBook);
+                const collection = db.collection("users");
+                const existingAccount = await collection.findOne({"email": userInfo.email});
 
-                // Redirect to login page
-                res.writeHead(302, { 'Location': '/home' });
-                res.end();
+                // Check for an existing account
+                if (existingAccount) {
+                    currDonations = existingAccount.donations;
+                    currDonations += 1;
+                    const result = await collection.updateOne({ email: userInfo.email }, { $set: {donations: currDonations}});
+                }
+
+                else {
+                    res.writeHead(302, { 'Location': '/login?error=true' });
+                    res.end();
+                }
             }
             // Catch any errors that come up
             catch (err) {
