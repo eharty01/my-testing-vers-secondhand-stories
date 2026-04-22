@@ -153,7 +153,7 @@
                 <!-- Autofill form container-->
                 <div class="autofill">
                     <h3>Autofill</h3>
-                    <form onsubmit="loadBookDetails(event); return false;">
+                    <form action="process-autofill" method="POST">
                         <div class="fields">
                             <div class="field-container">
                                 <label for="title">Title</label>
@@ -170,7 +170,7 @@
                 </div>
                 <!-- End of autofill container -->
 
-                <form>
+                <form action="process-donate" method="POST">
                 <!--prev form tag-->
                     <label for="title">Title</label>
                     <input id="title" name="title" type="text">
@@ -195,51 +195,13 @@
     </footer>
 </body>
 <script>
-    function loadBookDetails(event) {
-
-        if (event) {
-            event.preventDefault();
-        }
-
-        // Reset the search results
-        document.getElementById("result").innerHTML = "";
-
-        // Get the ISBN and fields to fill
-        const isbn = document.getElementById("isbn-input").value;
-        const title = document.getElementById("title-input").value;
-        const titleField = document.getElementById("title");
-        const authorField = document.getElementById("author");
-
-        var url;
-
-        // Make the url
-        if (isbn) {
-            url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
-        }
-        else if (title) {
-            url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
-        }
-
-        // Get search results
-        fetch(url)
-        .then (res => res.text())
-        .then (response => {
-            // Parse the JSON
-            data = JSON.parse(response);
-            console.log(JSON.stringify(data));
-            // Show the data
-            if (data["items"]) {
-                titleField.value = data["items"]["0"].volumeInfo.title;
-                authorField.value = data["items"]["0"].volumeInfo.authors[0];
-            }
-            else {
-                alert("No books found");
-            }
-
-        })
-        // Catch any errors
-        .catch (error => console.log(error));
-    } // End of loadBookDetails function
-
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('error')) {
+        alert("No books found");
+    }
+    if (urlParams.get('title') && urlParams.get('author')) {
+        document.getElementById("title").value = urlParams.get('title');
+        document.getElementById("author").value = urlParams.get('author');
+    }
 </script>
 </html>

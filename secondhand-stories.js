@@ -200,6 +200,122 @@ var server = http.createServer(function (req, res) {
             res.end();
         });
     }
+    else if (path == "/process-autofill" && req.method == 'POST') {
+        // Get the form data
+        let body = "";
+        // Collect the data
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        
+        req.on('end', async () => {
+            // Get the form data
+            const formData = querystring.parse(body);
+            // Create a new book
+            const title = formData.title;
+            const isbn = formData.isbn;
+
+            let url = "";
+
+            if (isbn) {
+            url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
+            }
+            else if (title) {
+                url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${title}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
+            }
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            console.log(JSON.stringify(data));
+
+            if (data && data["totalItems"] > 0) {
+                const autofillResult = data["items"][0]["volumeInfo"];
+
+                console.log(JSON.stringify(autofillResult));
+                const autofillTitle = autofillResult.title;
+                const autofillAuthor = autofillResult.authors[0];
+
+                res.writeHead(302, { 'Location': `/donate?title=${autofillTitle}&author=${autofillAuthor}` });
+                res.end();
+
+            }
+            else {
+                res.writeHead(302, { 'Location': `/donate?error=true` });
+                res.end();
+            }
+        });
+        return;
+    }
+    // Load the home page
+    else if (path == "/about") {
+        fs.readFile("about.html", function(err, txt) {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            // Catch any errors
+            if (err) {
+                res.write("Error loading about.html");
+            } else {
+                res.write(txt);
+            }
+            res.end();
+        });
+    }
+    // Load the home page
+    else if (path == "/privacy-policy") {
+        fs.readFile("privacyPolicy.html", function(err, txt) {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            // Catch any errors
+            if (err) {
+                res.write("Error loading privacyPolicy.html");
+            } else {
+                res.write(txt);
+            }
+            res.end();
+        });
+    }
+    else if (path == "/process-donate" && req.method == 'POST') {
+        // Get the form data
+        let body = "";
+        // Collect the data
+        req.on('data', chunk => {
+            body += chunk.toString();
+        });
+        
+        req.on('end', async () => {
+            // Get the form data
+            const formData = querystring.parse(body);
+            // Create a new book
+            const newBook = {
+                "title": formData.title,
+                "author": formData.author,
+            }
+            // Connect to MongoDB
+            const client = new MongoClient(connStr);
+            
+            try {
+                await client.connect();
+                // Go to this database
+                const db = client.db("secondhand-db");
+                // Go to this collection
+                const collection = db.collection("books");
+                
+                // Insert a new user
+                const result = await collection.insertOne(newBook);
+
+                // Redirect to login page
+                res.writeHead(302, { 'Location': '/home' });
+                res.end();
+            }
+            // Catch any errors that come up
+            catch (err) {
+                res.writeHead(500);
+                res.end("Database Error: " + err.message);
+            }
+            finally {
+                await client.close();
+            }
+        });
+        return;
+    }
     // Load the home page
     else if (path == "/about") {
         fs.readFile("about.html", function(err, txt) {
