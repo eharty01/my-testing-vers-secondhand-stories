@@ -77,18 +77,18 @@ var server = http.createServer(function (req, res) {
 
                 // Search for the user
                 const matchingUser = await collection.findOne({ "email": email, "password": pass });
-                
-                userInfo.first = matchingUser.first;
-                userInfo.last = matchingUser.last;
-                userInfo.email = matchingUser.email;
 
                 if (matchingUser) {
+                    // Save login information
+                    userInfo.first = matchingUser.first;
+                    userInfo.last = matchingUser.last;
+                    userInfo.email = matchingUser.email;
                     // Success! Redirect to home or show success
                     res.writeHead(302, { 'Location': '/home' });
                     res.end();
                 } else {
                     // Failure
-                    res.writeHead(302, { 'Location': '/login?error=true' });
+                    res.writeHead(302, { 'Location': '/login?error=account-not-found' });
                     res.end();
                 }
             } catch (err) {
@@ -142,11 +142,13 @@ var server = http.createServer(function (req, res) {
                 // Go to this collection
                 const collection = db.collection("users");
 
-                const existingAccount = await collection.find({"email": newUser.email});
+                console.log("Searching for 'email' = " + newUser.email);
+                const existingAccount = await collection.findOne({"email": newUser.email});
+                console.log("Existing account: " + JSON.stringify(existingAccount));
 
                 // Check for an existing account
-                if (existingAccount && existingAccount["totalItems"] > 0) {
-                    res.writeHead(302, { 'Location': '/signup?error=true' });
+                if (existingAccount) {
+                    res.writeHead(302, { 'Location': '/signup?error=existing-account' });
                     res.end();
                 }
                 else {

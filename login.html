@@ -62,7 +62,7 @@
 </body>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('error')) {
+    if (urlParams.get('error') == 'account-not-found') {
         alert("Incorrect username or password");
     }
 </script>
