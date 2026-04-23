@@ -1,6 +1,22 @@
 {
-	"dependencies": {
-		"mongodb": "~4.0.1",
-		"node": ""
-	}
+  "name": "secondhand-stories",
+  "version": "1.0.0",
+  "description": "Giving every story a second chapter.",
+  "main": "secondhand-stories.js",
+  "scripts": {
+    "start": "node secondhand-stories.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "mongodb": "4.0"
+  }
 }
