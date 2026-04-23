@@ -1,10 +1,10 @@
 {
-  "name": "helloapp",
+  "name": "secondhand-stories",
   "version": "1.0.0",
   "description": "example node app for heroku ",
-  "main": "webapp2.js",
+  "main": "secondhand-stories.js",
   "scripts": {
-    "start": "node webapp2.js"
+    "start": "node secondhand-stories.js"
   },
   "dependencies": {
     "mongodb": "4.0"
