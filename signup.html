@@ -66,8 +66,8 @@
 </body>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('error')) {
-        alert("That email already has an account");
+    if (urlParams.get('error') == 'existing-account') {
+        alert("There is already an account associated with that email");
     }
 </script>
 </html>
