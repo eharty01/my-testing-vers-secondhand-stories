@@ -7,8 +7,10 @@ var port = 8080;   // uncomment to run local
 
 const MongoClient = require('mongodb').MongoClient;
 const connStr = "mongodb+srv://login_user:db123@leaderboard.gw09mzd.mongodb.net/?appName=leaderboard";
-// The header is set to the guest one by defualt, will update upon login
-var header = fs.readFileSync("header.html", "utf8");
+// The header and footer to include on every page
+const header = fs.readFileSync("header.html", "utf8");
+const footer = fs.readFileSync("footer.html", "utf8");
+
 
 var userInfo = 
     {
@@ -36,6 +38,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -50,6 +53,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -110,6 +114,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -183,6 +188,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -197,6 +203,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -211,6 +218,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -268,6 +276,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -282,6 +291,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -388,6 +398,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -402,6 +413,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -416,6 +428,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
@@ -430,6 +443,7 @@ var server = http.createServer(function (req, res) {
             } else {
                 res.write(header); // Write the pre-loaded header
                 res.write(txt);
+                res.write(footer); // Write the pre-loaded footer
             }
             res.end();
         });
