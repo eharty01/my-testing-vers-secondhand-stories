@@ -2,8 +2,8 @@ var http = require('http');
 var url = require('url');
 var fs = require('fs');
 const querystring = require('querystring');
-// var port = process.env.PORT || 3000;
-var port = 8080;   // uncomment to run local
+var port = process.env.PORT || 3000;
+// var port = 8080;   // uncomment to run local
 
 const MongoClient = require('mongodb').MongoClient;
 const connStr = "mongodb+srv://login_user:db123@leaderboard.gw09mzd.mongodb.net/?appName=leaderboard";
@@ -140,9 +140,7 @@ var server = http.createServer(function (req, res) {
                 // Go to this collection
                 const collection = db.collection("users");
 
-                console.log("Searching for 'email' = " + newUser.email);
                 const existingAccount = await collection.findOne({"email": newUser.email});
-                console.log("Existing account: " + JSON.stringify(existingAccount));
 
                 // Check for an existing account
                 if (existingAccount) {
@@ -300,9 +298,10 @@ var server = http.createServer(function (req, res) {
         req.on('end', async () => {
             // Get the form data
             const formData = querystring.parse(body);
+            const isbn = formData.isbn;
             const email = formData.email;
 
-            apiUrl = `https://www.googleapis.com/books/v1/volumes?q=intitle:${formData.title}&inauthor:${formData.author}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
+            apiUrl = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&key=AIzaSyAhyo9Gmq82G1N8vJWwaBITJNK0yxOH-wA`;
 
             const response = await fetch(apiUrl);
             const data = await response.json();
@@ -314,8 +313,7 @@ var server = http.createServer(function (req, res) {
                 res.writeHead(302, { 'Location': '/donate?error=not_found' });
                 return res.end();
             }
-
-            if (data && data["totalItems"] != 0) {
+            else {
                 
                 // Create a new book
                 const isbn13 = bookData.industryIdentifiers?.find(id => id.type === "ISBN_13")?.identifier;
@@ -348,8 +346,11 @@ var server = http.createServer(function (req, res) {
                         // Check for an existing account
                         if (existingAccount) {
                             currDonations = existingAccount.donations;
+                            currCredits = existingAccount.credits;
                             currDonations += 1;
+                            currCredits += 1;
                             await usersCollection.updateOne({ email: email }, { $set: {donations: currDonations}});
+                            await usersCollection.updateOne({ email: email }, { $set: {credits: currCredits}});
 
                             // Insert the new book
                             await collection.insertOne(newBook);
