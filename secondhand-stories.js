@@ -191,8 +191,8 @@ var server = http.createServer(function (req, res) {
                 const collection = db.collection("users");
                 const email = urlObj.query.storedEmail;
 
-                const user = await User.findOne({ email: email });
-                res.status(200).json({ donations: user.donations });
+                const user = await collection.findOne({ email: email });
+                res.status(200).json({ "Content-Type": "application/json" });
             } catch (error) {
                 res.writeHead(500);
                 res.end("Database Error: " + error.message);
