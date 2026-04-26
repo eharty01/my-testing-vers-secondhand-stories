@@ -140,7 +140,7 @@
 <body>
     <div class="content">
         <h1>Cart</h1>
-        <p>Finalzing your collection... you're just a few clicks away from owning these books!</p>
+        <p>Finalizing your collection... you're just a few clicks away from owning these books!</p>
         <br>
 
         <div class="cart-container">
@@ -191,6 +191,7 @@
         let itemCount = 0;
         const storedEmail = localStorage.getItem('user_email');
         let availableCredits = 0;
+        let usedCredits = 0;
         let totalUnformatted = 0;
 
         fetch(`/creditInfo?email=${encodeURIComponent(storedEmail)}`)
@@ -269,23 +270,36 @@
         }
 
         function applyCreds() {
-            if (itemCount == 0) {
+            var checkBox = document.getElementById("credCheck");
+
+            if (checkBox.checked) {
+              if (itemCount == 0) {
                 alert("Select books to apply credits.");
                 return;
-            }
+                }
 
-            // check if donations should be applied
-            if (availableCredits >= totalUnformatted) {
-                document.getElementById('totalValue').innerText = '$0.00';
-                availableCredits = availableCredits - totalUnformatted;
+                if (availableCredits >= totalUnformatted) {
+                    document.getElementById('totalValue').innerText = '$0.00';
+                    availableCredits = availableCredits - totalUnformatted;
+                    usedCredits = totalUnformatted;
+                    totalUnformatted = 0;
+                    document.getElementById('donations').innerText = '-$' + usedCredits;
+                } else {
+                    totalUnformatted = totalUnformatted - availableCredits;
+                    const newTotal = totalUnformatted.toFixed(2);
+                    document.getElementById('totalValue').innerText = `$${newTotal}`;
+                    usedCredits = availableCredits;
+                    availableCredits = 0;
+                    document.getElementById('donations').innerText = '-$' + usedCredits;
+                }
             } else {
-                totalUnformatted = totalUnformatted - availableCredits;
+                totalUnformatted = totalUnformatted + usedCredits;
                 const newTotal = totalUnformatted.toFixed(2);
                 document.getElementById('totalValue').innerText = `$${newTotal}`;
-                availableCredits = 0;
+                availableCredits = availableCredits + usedCredits;
+                usedCredits = 0;
+                document.getElementById('donations').innerText = '-$' + availableCredits;
             }
-
-
         }
         
         // Clear all items from cart
@@ -314,10 +328,14 @@
             availableCredits = availableCredits / 5;
             const userDonations = new URLSearchParams({ email: storedEmail, donations: availableCredits });
 
-            fetch(`/useCredit?donations=${userDonations.toString()}`);
+            fetch(`/useCredit?${userDonations.toString()}`);
         
             alert("Proceeding to checkout! Thank you for shopping with us!");
-            clearCart();
+
+            // clear cart w/o alert
+            const emptyCart = { items: [] };
+            localStorage.setItem('shoppingCart', JSON.stringify(emptyCart));
+            displayCart();
         }
         
         // render on page load
