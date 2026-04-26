@@ -119,11 +119,11 @@
                 return;
             }
 
-            // Get existing cart and check if it's currently empty
+            // Get existing cart or create one if it doesn't exist
             let cart = localStorage.getItem('shoppingCart');
 
             if (!cart) {
-                cart = { items: [], total: 0 };
+                cart = { items: []};
             } else {
                 cart = JSON.parse(cart);
             }
@@ -136,19 +136,10 @@
 
             // save cart to local storage
             localStorage.setItem('shoppingCart', JSON.stringify(cart));
-
-            // confirm addition
             alert(`${window.currentBook.title} added to cart!`);
         }
 
-        // event listener for clicking the add to cart button
-        document.addEventListener('DOMContentLoaded', () => {
-            const addToCartBtn = document.querySelector('.cart-btn');
-            if (addToCartBtn) {
-                addToCartBtn.addEventListener('click', addToCart);
-            }
-        });
-
+        document.querySelector('.cart-btn').addEventListener('click', addToCart);
     </script>
 </body>
 </html>
