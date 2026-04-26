@@ -159,6 +159,10 @@
                     <span>Volume Discount (10% off for 5+ books):</span>
                     <span id="discountValue">-$0.00</span>
                 </div>
+                <div class="summary-line" id="creditRow">
+                    <span>Credits Available:</span>
+                    <span id="donations">-$0.00</span>
+                </div>
                 <div class="summary-line">
                     <span>Tax:</span>
                     <span id="taxValue">$0.00</span>
@@ -177,7 +181,13 @@
     </div>
 
     <script>
-        let itemCount = 0; 
+        let itemCount = 0;
+        const storedEmail = localStorage.getItem('user_email');
+
+        fetch(`/creditInfo?email=${encodeURIComponent(storedEmail)}`)
+            .then(user => {
+                document.getElementById("donations").innerText = user.donations * 5;
+        });
 
         function displayCart() {
             // get cart from local storage and check if it's empty
@@ -256,7 +266,7 @@
             // clear cart and refresh
             const confirmClear = confirm("Are you sure you want to remove all books from your cart?");
             if (confirmClear) {
-                const emptyCart = { items: [], total: 0 };
+                const emptyCart = { items: [] };
                 localStorage.setItem('shoppingCart', JSON.stringify(emptyCart));
                 displayCart();
                 alert("Cart cleared successfully.");
@@ -269,7 +279,7 @@
                 return;
             }
 
-            
+
         
             alert("Proceeding to checkout!\n Thank you for shopping with us!");
         }

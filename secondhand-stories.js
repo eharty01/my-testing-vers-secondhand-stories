@@ -182,6 +182,25 @@ var server = http.createServer(function (req, res) {
             }
             res.end();
         });
+    } else if (path == "/creditInfo" && req.method == "GET") {
+        (async () => {
+        const client = new MongoClient(connStr);
+            try {
+                await client.connect();
+                const db = client.db("secondhand-db");
+                const collection = db.collection("users");
+                const email = urlObj.query.storedEmail;
+
+                const user = await User.findOne({ email: email });
+                res.status(200).json({ donations: user.donations });
+            } catch (error) {
+                res.writeHead(500);
+                res.end("Database Error: " + error.message);
+            }
+            finally {
+                await client.close();
+            }
+        });
     }
     // Load the home page
     else if (path == "/catalog") {
