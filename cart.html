@@ -187,7 +187,7 @@
         fetch(`/creditInfo?email=${encodeURIComponent(storedEmail)}`)
             .then(res => res.json())
             .then(user => {
-                document.getElementById("donations").innerText = user.donations * 5;
+                document.getElementById("donations").innerText = "$" + user.donations * 5;
         });
 
         function displayCart() {
