@@ -1,15 +1,16 @@
 {
   "name": "secondhand-stories",
   "version": "1.0.0",
-  "description": "example node app for heroku ",
+  "description": "Give every story a second chapter.",
   "main": "secondhand-stories.js",
   "engines": {
     "node": "24.x"
   },
   "scripts": {
-    "start": "node secondhand-stories.js"
+    "start": "node secondhand-stories.js",
+    "dev": "node --watch secondhand-stories.js"
   },
   "dependencies": {
-    "mongodb": "4.0"
+    "mongodb": "^6.5.0"
   }
 }
