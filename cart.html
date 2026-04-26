@@ -287,14 +287,14 @@
                     availableCredits = parseFloat((availableCredits - totalUnformatted).toFixed(2));
                     usedCredits = parseFloat(totalUnformatted.toFixed(2));
                     totalUnformatted = 0;
-                    document.getElementById('donations').innerText = '-$' + usedCredits;
+                    document.getElementById('donations').innerText = '-$' + availableCredits;
                 } else {
                     totalUnformatted = totalUnformatted - availableCredits;
                     const newTotal = totalUnformatted.toFixed(2);
                     document.getElementById('totalValue').innerText = `$${newTotal}`;
                     usedCredits = availableCredits;
                     availableCredits = 0;
-                    document.getElementById('donations').innerText = '-$' + usedCredits;
+                    document.getElementById('donations').innerText = '-$0.00';
                 }
             } else {
                 totalUnformatted = totalUnformatted + usedCredits;
