@@ -184,24 +184,27 @@ var server = http.createServer(function (req, res) {
         });
     } else if (path == "/creditInfo" && req.method == "GET") {
         (async () => {
-        const client = new MongoClient(connStr);
+            const client = new MongoClient(connStr);
+
             try {
                 await client.connect();
                 const db = client.db("secondhand-db");
                 const collection = db.collection("users");
+
                 const email = urlObj.query.email;
 
-                const user = await collection.findOne({ email: email });
+                const user = await collection.findOne({ email });
+
                 res.writeHead(200, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ donations: user.donations || 0}));
+                res.end(JSON.stringify({ donations: user.donations }));
+
             } catch (error) {
                 res.writeHead(500, { "Content-Type": "application/json" });
-                res.end(JSON.stringify("Error:" + error.message));
-            }
-            finally {
+                res.end(JSON.stringify({ error: error.message }));
+            } finally {
                 await client.close();
             }
-        });
+        })();
     }
     // Load the home page
     else if (path == "/catalog") {
