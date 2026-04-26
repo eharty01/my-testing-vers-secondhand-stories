@@ -108,7 +108,6 @@
                 pubDate: document.getElementById("info-date").innerText = book.year || "Unknown",
                 genre: document.getElementById("info-genre").innerText = book.genre || "Unknown",
                 cover: document.getElementById("book-cover").src = book.image || 'images/no-cover.jpeg',
-                price: 5,
             };
 
             window.currentBook = bookData;
@@ -133,7 +132,6 @@
             cart.items.push({
                 title: window.currentBook.title,
                 author: window.currentBook.author,
-                price: window.currentBook.price,
             });
 
             // save cart to local storage
