@@ -38,6 +38,7 @@
             color: #000000;
             max-width: 540px;
             margin: 0 auto;
+            margin-bottom: 24px;
             
         }
         .search-bar {
@@ -112,6 +113,7 @@
             align-items: start;
             max-width: 1000px;
             margin: 0 auto;
+            justify-items: center;
         }
         .book-card {
             background: #FFFFFF;
@@ -120,6 +122,8 @@
             display: flex;
             flex-direction: column;
             gap: 16px;  
+            max-width: 330px;
+            height: 100%;
             
         }
         
@@ -177,17 +181,21 @@
             
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 878px) {
             .catalog-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, minmax(0, 300px));
+                /* from w2 schools... https://www.w3schools.com/cssref/func_minmax.php */
+                justify-content: center;
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 650px) {
             .catalog-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 300px);
+                justify-content: center;
             }
         }
+
         @media (max-width: 100px) {
             .catalog-grid {
                 grid-template-columns: 1fr;
@@ -246,7 +254,7 @@
 
         bookResults.forEach(book => {
             // use the image saved in DB
-            const coverSrc = book.image;
+            const coverSrc = book.image || 'images/no-cover.jpeg';
 
             grid.innerHTML += `
                 <div class="book-card">

@@ -185,16 +185,6 @@ var server = http.createServer(function (req, res) {
     }
     // Load the home page
     else if (path == "/catalog") {
-        // fs.readFile("catalog.html", function(err, txt) {
-        //     res.writeHead(200, {'Content-Type': 'text/html'});
-        //     // Catch any errors
-        //     if (err) {
-        //         res.write("Error loading catalog.html");
-        //     } else {
-        //         res.write(txt);
-        //     }
-        //     res.end();
-        // });
         (async () => {
         const client = new MongoClient(connStr);
         try {
@@ -216,7 +206,7 @@ var server = http.createServer(function (req, res) {
                 const final = txt.replace('<head>', '<head>' + data);
 
                 res.writeHead(200, { 'Content-Type': 'text/html' });
-                res.end(header + final + footer); //come back
+                res.end(header + final + footer); 
             });
         } catch (err) {
             res.writeHead(500);
@@ -323,8 +313,7 @@ var server = http.createServer(function (req, res) {
 
         req.on('end', async () => {
             const formData = querystring.parse(body);
-            //const searchTitle = formData.title;
-
+            //connect mongodb
             const client = new MongoClient(connStr);
 
             try {
@@ -333,6 +322,7 @@ var server = http.createServer(function (req, res) {
                     
                 const collection = db.collection("books");
 
+                //allow for search to be close enough to title to pull information
                 let mongoQuery = {};
                 if (formData.title) {
                     mongoQuery.title = new RegExp(formData.title, 'i');
