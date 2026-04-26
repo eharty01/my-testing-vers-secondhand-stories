@@ -1,140 +1,426 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="keywords" content="secondhand books, affordable books, book donations, global literacy, sustainability" />
-    <meta name="description" content="View your shopping cart and manage your selected books." />
-    <title>Cart</title>
-    <link rel="stylesheet" href="style.css">
-  <style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Bookstore</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .cart-page {
+        body {
             background: #E9EED9;
-            min-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 40px 20px 60px;
-        }
-
-    .cart-subtitle {
-        font-family: 'Trebuchet MS', Arial, sans-serif;
-        font-size: 16px;
-        color: #1B4332;
-        text-align: center;
-        margin: 0 0 36px;
-    }
-    
-    .order-summary-card {
-            background: #ffffff;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 580px;
-            padding: 40px 50px 50px;
-        }
-
-    .order-summary-card h3 {
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        font-size: 28px;
-        color: #081C15;
-        text-align: center;
-        margin: 0 0 32px;
-        font-weight: 400;
-    }
-
-    .order-lines {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            margin-bottom: 0;
-        }
- 
-        .order-line {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             font-family: 'Trebuchet MS', Arial, sans-serif;
-            font-size: 16px;
+            padding: 40px 20px;
+        }
+
+        .cart-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px 35px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
             color: #1B4332;
-            padding: 10px 0;
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
- 
-        .order-divider {
-            border: none;
-            border-top: 1px solid #c8d5bc;
-            margin: 8px 0;
+
+        p {
+            text-align: center;;
         }
- 
-        .order-total {
+
+        .subhead {
+            text-align: center;
+            color: #4a6b5a;
+            font-size: 14px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e8d6;
+            padding-bottom: 15px;
+        }
+
+        /* book list styles */
+        .cart-items {
+            margin: 20px 0;
+        }
+
+        .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-family: 'Trebuchet MS', Arial, sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-            color: #081C15;
-            padding: 12px 0 0;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee8da;
         }
- 
-        .confirm-btn-wrapper {
+
+        .book-details {
+            flex: 2;
+        }
+
+        .book-title {
+            font-weight: 600;
+            color: #1e3a2f;
+            font-size: 16px;
+        }
+
+        .book-author {
+            font-size: 13px;
+            color: #7a6a5a;
+            margin-top: 4px;
+        }
+
+        .book-price {
+            font-weight: 600;
+            color: #2c6e49;
+            background: #ecf7e6;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 15px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 50px 20px;
+            background: #fcf9ef;
+            border-radius: 16px;
+            color: #8b7355;
+            font-style: italic;
+        }
+
+        /* summary section */
+        .summary {
+            margin-top: 25px;
+            background: #fafaf5;
+            padding: 20px 20px;
+            border-radius: 16px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 16px;
+        }
+
+        .summary-line.discount {
+            color: #2c6e49;
+            font-weight: 500;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0 8px;
+            font-size: 20px;
+            font-weight: bold;
+            border-top: 2px solid #d4e2ca;
+            margin-top: 8px;
+            color: #1B4332;
+        }
+
+        .btn-group {
             display: flex;
             justify-content: center;
-            margin-top: 48px;
+            gap: 18px;
+            margin-top: 30px;
         }
- 
-        .confirm-btn-wrapper button {
-            width: 160px;
-            height: 48px;
-            font-size: 18px;
+
+        button {
+            padding: 10px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 40px;
             cursor: pointer;
-            border-radius: 10px;
+            transition: 0.2s;
+            font-family: inherit;
         }
- 
-        @media (max-width: 768px) {
-            .order-summary-card { padding: 28px 24px 36px; }
+
+        .clear-btn {
+            background: #f0e2d0;
+            color: #7c4a2b;
         }
-          
-  </style>
+
+        .clear-btn:hover {
+            background: #e6d4be;
+        }
+
+        .checkout-btn {
+            background: #2c6e49;
+            color: white;
+        }
+
+        .checkout-btn:hover {
+            background: #1f553a;
+            transform: scale(1.02);
+        }
+
+        hr {
+            margin: 10px 0;
+            border-color: #e2e2cf;
+        }
+
+        .discount-badge {
+            background: #d9efcf;
+            display: inline-block;
+            font-size: 12px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+    </style>
 </head>
 <body>
-    <div class="content">
-        <div class="cart-page">
-            <h2>Cart</h2>
-            <div class="cart-subtitle">
-                Finalizing your collection...you’re just a few clicks away from owning these books!
-            </div>
+<div class="content">
+<h1>Cart</h1>
+<p>Finalzing your collection... you're just a few clicks away from owning these books!</p>
+<br>
+<div class="cart-container">
+    <h1>Order Summary</h1>
+    <div class="subhead">Review the books you've chosen</div>
 
-            <div class="order-summary-card">
-                <h3>Order Summary</h3>
+    <!-- dynamic book list will appear here -->
+    <div id="cartItemsList" class="cart-items"></div>
 
-            <div class="order-lines">
-                <div class="order-line">
-                    <span>Subtotal:</span>
-                    <span>$XX.XX</span>
-                </div>
-                <div class="order-line">
-                    <span>Volume Discount ():</span>
-                    <span>$XX.XX</span>
-                </div>
-                <div class="order-line">
-                    <span>Donation Credits ():</span>
-                    <span>$XX.XX</span>
-                </div>
-                <div class="order-line">
-                    <span>Tax (6.25%):</span>
-                    <span>$XX.XX</span>
-                </div>
-            </div>
-            <hr class="order-divider" />
-            
-
-            <div class=" confirm-btn-wrapper">
-                <a href="index.html"><button>Checkout</button></a> 
-                <!-- just for now --></div>
-            
+    <!-- order summary (subtotal, discount, total) -->
+    <div class="summary" id="summarySection">
+        <div class="summary-line">
+            <span>Subtotal:</span>
+            <span id="subtotalValue">$0.00</span>
+        </div>
+        <div class="summary-line discount" id="discountRow">
+            <span>Volume Discount (10% off for 5+ books):</span>
+            <span id="discountValue">-$0.00</span>
+        </div>
+        <div class="total-line">
+            <span>Total:</span>
+            <span id="totalValue">$0.00</span>
         </div>
     </div>
+
+    <div class="btn-group">
+        <button class="clear-btn" id="clearCartBtn">Clear Cart</button>
+        <button class="checkout-btn" id="checkoutBtn">Checkout</button>
+    </div>
+</div>
+
+<script>
+    // ---------- Helper: get cart from localStorage (same structure as your add-to-cart) ----------
+    function getCart() {
+        const stored = localStorage.getItem('shoppingCart');
+        if (!stored) {
+            return { items: [], total: 0 };
+        }
+        try {
+            const parsed = JSON.parse(stored);
+            // ensure items array exists
+            if (!parsed.items) {
+                return { items: [], total: 0 };
+            }
+            return parsed;
+        } catch(e) {
+            console.warn("Error reading cart", e);
+            return { items: [], total: 0 };
+        }
+    }
+
+    // save cart back to localStorage
+    function saveCart(cart) {
+        localStorage.setItem('shoppingCart', JSON.stringify(cart));
+    }
+
+    // display cart items + calculate subtotal, discount (10% if more than 5 books), total
+    function renderCart() {
+        const cart = getCart();
+        const items = cart.items || [];
+        const container = document.getElementById('cartItemsList');
+        
+        // If cart is empty -> show empty message and reset summary
+        if (items.length === 0) {
+            container.innerHTML = `<div class="empty-cart">Your cart is empty.<br>Add some great books from the store!</div>`;
+            // reset all dollar amounts to zero
+            document.getElementById('subtotalValue').innerText = '$0.00';
+            document.getElementById('discountValue').innerText = '-$0.00';
+            document.getElementById('totalValue').innerText = '$0.00';
+            // optional: hide discount special badge? not needed.
+            return;
+        }
+        
+        // --- Build book list HTML (shows title and author) ---
+        let booksHTML = '';
+        let subtotal = 0;
+        
+        for (let i = 0; i < items.length; i++) {
+            const book = items[i];
+            // title and author (from original add-to-cart structure)
+            const title = book.title || 'Unknown Title';
+            const author = book.author || 'Unknown Author';
+            // price: each book is $5 as defined in your original code (window.currentBook.price = 5)
+            let price = (book.price && typeof book.price === 'number') ? book.price : 5.00;
+            subtotal += price;
+            
+            booksHTML += `
+                <div class="cart-item">
+                    <div class="book-details">
+                        <div class="book-title">${escapeHtml(title)}</div>
+                        <div class="book-author">by ${escapeHtml(author)}</div>
+                    </div>
+                    <div class="book-price">$${price.toFixed(2)}</div>
+                </div>
+            `;
+        }
+        
+        // apply volume discount: if more than 5 books -> 10% off subtotal
+        const itemCount = items.length;
+        let discountAmount = 0;
+        let discountPercent = 0;
+        let discountApplied = false;
+        
+        if (itemCount > 5) {
+            discountPercent = 0.10;   // 10% discount
+            discountAmount = subtotal * discountPercent;
+            discountApplied = true;
+        } else {
+            discountAmount = 0;
+        }
+        
+        // final total after discount
+        const finalTotal = subtotal - discountAmount;
+        
+        // format nicely to 2 decimal places
+        const subtotalFormatted = subtotal.toFixed(2);
+        const discountFormatted = discountAmount.toFixed(2);
+        const totalFormatted = finalTotal.toFixed(2);
+        
+        // inject books list into container
+        container.innerHTML = booksHTML;
+        
+        // Update summary fields
+        document.getElementById('subtotalValue').innerHTML = `$${subtotalFormatted}`;
+        document.getElementById('discountValue').innerHTML = `-$${discountFormatted}`;
+        document.getElementById('totalValue').innerHTML = `$${totalFormatted}`;
+        
+        // optional: add a small badge or note next to discount row if discount applies
+        const discountRowSpan = document.querySelector('#discountRow span:first-child');
+        if (discountApplied) {
+            if (!document.querySelector('.discount-badge')) {
+                // if there is already badge? refresh safe
+                const existingBadge = discountRowSpan.querySelector('.discount-badge');
+                if(existingBadge) existingBadge.remove();
+                const badge = document.createElement('span');
+                badge.className = 'discount-badge';
+                badge.innerText = ` ${itemCount} books → 10% off!`;
+                discountRowSpan.appendChild(badge);
+            } else {
+                const badge = discountRowSpan.querySelector('.discount-badge');
+                if(badge) badge.innerText = ` ${itemCount} books → 10% off!`;
+            }
+        } else {
+            // remove any badge if discount not active
+            const badge = discountRowSpan.querySelector('.discount-badge');
+            if (badge) badge.remove();
+            // also maybe show a hint?
+            if(itemCount > 0 && itemCount <=5) {
+                // optional subtle hint: but not required
+                if(!discountRowSpan.querySelector('.hint-text')) {
+                    const hint = document.createElement('span');
+                    hint.className = 'discount-badge';
+                    hint.style.background = "#f0e2cf";
+                    hint.innerText = ` ${6-itemCount} more book(s) for 10% off`;
+                    discountRowSpan.appendChild(hint);
+                    setTimeout(() => {
+                        if(hint && hint.remove) hint.remove();
+                    }, 3000);
+                }
+            }
+        }
+    }
+    
+    // simple helper to avoid XSS
+    function escapeHtml(str) {
+        if(!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // Clear all items from cart
+    function clearCart() {
+        const cart = getCart();
+        if (!cart.items || cart.items.length === 0) {
+            alert("Cart is already empty.");
+            return;
+        }
+        const confirmClear = confirm("Remove all books from your cart?");
+        if (confirmClear) {
+            const emptyCart = { items: [], total: 0 };
+            saveCart(emptyCart);
+            renderCart();   // refresh display
+            alert("Cart cleared successfully.");
+        }
+    }
+    
+    // Checkout action (simple placeholder, as per original)
+    function handleCheckout() {
+        const cart = getCart();
+        if (!cart.items || cart.items.length === 0) {
+            alert("Your cart is empty. Add some books first.");
+            return;
+        }
+        // calculate total again for accurate feedback
+        let sub = 0;
+        for(let b of cart.items) {
+            let p = (b.price && typeof b.price === 'number') ? b.price : 5;
+            sub += p;
+        }
+        let disc = 0;
+        if(cart.items.length > 5) disc = sub * 0.10;
+        let totalDue = sub - disc;
+        alert(`✓ Proceeding to checkout!\n📚 Items: ${cart.items.length}\n💰 Total: $${totalDue.toFixed(2)}\n(Thank you for shopping!)`);
+        // optional: redirect to index.html as original design placeholder
+        // window.location.href = "index.html";
+        // for simplicity, we just show alert (but you can uncomment if you want)
+        // keep the same behavior: index redirect? original 'Checkout' button linked to index.html.
+        // I'll follow original: redirect to index.html
+        window.location.href = "index.html";
+    }
+    
+    // listen for cart changes from other tabs (optional)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'shoppingCart') {
+            renderCart();
+        }
+    });
+    
+    // Initial render when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        renderCart();
+        
+        const clearBtn = document.getElementById('clearCartBtn');
+        if (clearBtn) clearBtn.addEventListener('click', clearCart);
+        
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        if (checkoutBtn) checkoutBtn.addEventListener('click', handleCheckout);
+    });
+    
+    // note: the existing add-to-cart logic you provided pushes { title, author, price:5 } into localStorage.
+    // This cart page reads exactly that structure. Also volume discount applies when more than 5 books.
+    // No credits required (as you asked - we skip donation credits).
+    // Simpler: only subtotal, discount (10% if itemCount >5), total.
+    // Display names & titles (title & author) as required.
+</script>
+</div>
 </body>
 </html>
