@@ -312,12 +312,12 @@
             }
 
             availableCredits = availableCredits / 5;
-
             const userDonations = new URLSearchParams({ email: storedEmail, donations: availableCredits });
 
             fetch(`/useCredit?donations=${userDonations.toString()}`);
         
-            alert("Proceeding to checkout!\n Thank you for shopping with us!");
+            alert("Proceeding to checkout! Thank you for shopping with us!");
+            clearCart();
         }
         
         // render on page load
