@@ -189,13 +189,14 @@ var server = http.createServer(function (req, res) {
                 await client.connect();
                 const db = client.db("secondhand-db");
                 const collection = db.collection("users");
-                const email = urlObj.query.storedEmail;
+                const email = urlObj.query.email;
 
                 const user = await collection.findOne({ email: email });
                 res.status(200).json({ "Content-Type": "application/json" });
+                res.end(JSON.stringify({ donations: user.donations || 0}));
             } catch (error) {
-                res.writeHead(500);
-                res.end("Database Error: " + error.message);
+                res.status(200).json({ "Content-Type": "application/json" });
+                res.end(JSON.stringify("Error:" + error.message));
             }
             finally {
                 await client.close();
