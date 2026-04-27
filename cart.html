@@ -361,7 +361,7 @@
                 await fetch(`/updateLibrary?title=${encodeURIComponent(title)}`);
             }
 
-            // clear cart w/o alert
+            // clear cart
             const emptyCart = { items: [] };
             localStorage.setItem('shoppingCart', JSON.stringify(emptyCart));
 

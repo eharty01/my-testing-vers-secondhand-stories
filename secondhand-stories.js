@@ -263,32 +263,37 @@ var server = http.createServer(function (req, res) {
     }
     else if (path == "/processCheckout" && req.method == "GET") {
         (async () => {
-            const totalItems = urlObj.query.totalItems;
+            try {
+                const totalItems = parseInt(urlObj.query.totalItems);
 
-            // NOTE: this is the stripe checkout blueprint, provided by stripe (they do price in cents for some reason)
-            const stripe = require('stripe')('sk_test_51TQgpnJCbaB2R6Vgq3VCznggWkj39qLx8Seu1XRdeqNDNtK5i4smae3uaLwcB1OzYgiXLsCwekkd1VZBONmWsxVm00e6gfZSS0');
+                // NOTE: this is the stripe checkout blueprint, provided by stripe (they do price in cents for some reason)
+                const stripe = require('stripe')('sk_test_51TQgpnJCbaB2R6Vgq3VCznggWkj39qLx8Seu1XRdeqNDNtK5i4smae3uaLwcB1OzYgiXLsCwekkd1VZBONmWsxVm00e6gfZSS0');
 
-            const session = await stripe.checkout.sessions.create({
-                line_items: [
-                {
-                    price_data: {
-                        currency: 'usd',
-                        unit_amount: 500,
-                        product_data: {
-                            name: 'book',
-                            description: 'Enjoy your read!',
+                const session = await stripe.checkout.sessions.create({
+                    line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            unit_amount: 500,
+                            product_data: {
+                                name: 'book',
+                                description: 'Enjoy your read!',
+                            },
                         },
+                        quantity: totalItems,
                     },
-                    quantity: totalItems,
-                },
-              ],
-              mode: 'payment',
-              success_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
-              cancel_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
-            });
+                  ],
+                  mode: 'payment',
+                  success_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
+                  cancel_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
+                });
 
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify({stripeURL: session.url}));
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({stripeURL: session.url}));
+            } catch (error) {
+                res.writeHead(500, { "Content-Type": "application/json" });
+                res.end(res.end(JSON.stringify({ error: error.message })));
+            }
         })();
     }
     // Load the home page
