@@ -296,8 +296,8 @@ var server = http.createServer(function (req, res) {
                   mode: 'payment',
 
                   // landing pages for after payment
-                  success_url: 'https://my-vers-secondhand-stories-030008331aee.herokuapp.com/home',
-                  cancel_url: 'https://my-vers-secondhand-stories-030008331aee.herokuapp.com/cart',
+                  success_url: 'https://secondhand-stories-eb69447276fa.herokuapp.com/home',
+                  cancel_url: 'https://secondhand-stories-eb69447276fa.herokuapp.com/cart',
                 });
 
                 // return the unique checkout link stripe creates for each purchase (auto loaded in front end)
