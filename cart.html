@@ -254,7 +254,7 @@
                         </div>
                         <div>$5</div>
                         <div>
-                            <button onclick="removeItem(${title})" class="remove-btn"><i class="fa-solid fa-x"></i></i></button>
+                            <button onclick="removeItem(${i})" class="remove-btn"><i class="fa-solid fa-x"></i></i></button>
                         </div>
                     </div>
                 `;
@@ -320,9 +320,9 @@
             }
         }
 
-        function removeItem(title) {
+        function removeItem(index) {
             let cart = JSON.parse(localStorage.getItem('shoppingCart'));
-            cart.items = cart.items.filter(item => item.title != title);
+            cart.items.splice(index, true);
 
             localStorage.setItem('shoppingCart', JSON.stringify(cart));
             displayCart();
