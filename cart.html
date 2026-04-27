@@ -361,7 +361,9 @@
             localStorage.setItem('shoppingCart', JSON.stringify(emptyCart));
             displayCart();
 
-            await fetch(`/processCheckout?totalItems${encodeURIComponent(itemCount)}`);
+            await fetch(`/processCheckout?totalItems=${encodeURIComponent(itemCount)}`);
+            const stripePage = await response.json();
+            window.location.href() = stripePage.url;
         }
         
         // render on page load

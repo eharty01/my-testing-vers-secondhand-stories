@@ -261,17 +261,17 @@ var server = http.createServer(function (req, res) {
         }
     })();
     }
-    else if (path == "/processCheckOut" && req.method == "GET") {
+    else if (path == "/processCheckout" && req.method == "GET") {
         (async () => {
             const totalItems = urlObj.query.totalItems;
 
-            // NOTE: this is the stripe checkout blueprint, provided by stripe
+            // NOTE: this is the stripe checkout blueprint, provided by stripe (they do price in cents for some reason)
             const stripe = require('stripe')('sk_test_51TQgpnJCbaB2R6Vgq3VCznggWkj39qLx8Seu1XRdeqNDNtK5i4smae3uaLwcB1OzYgiXLsCwekkd1VZBONmWsxVm00e6gfZSS0');
 
             const session = await stripe.checkout.sessions.create({
               line_items: [
                 {
-                  price: '5000',
+                  price: 500,
                   quantity: totalItems,
                 },
               ],
@@ -279,6 +279,9 @@ var server = http.createServer(function (req, res) {
               success_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
               cancel_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
             });
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({stripeURL: session.url}));
         })();
     }
     // Load the home page
