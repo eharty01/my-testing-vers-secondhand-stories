@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "mongodb": "^4.0",
-    "stripe": "^15.0.0"
+    "stripe": "^15.12.0"
   }
 }
