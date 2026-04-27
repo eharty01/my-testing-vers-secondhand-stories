@@ -181,6 +181,129 @@ var server = http.createServer(function (req, res) {
       res.end();
     });
   }
+  // get info on a user's num of credits
+  else if (path == "/creditInfo" && req.method == "GET") {
+        (async () => {
+            const client = new MongoClient(connStr);
+
+            try {
+                await client.connect();
+                const db = client.db("secondhand-db");
+                const collection = db.collection("users");
+
+                // get user/email from query string
+                const email = urlObj.query.email;
+
+                // search and return their donation info
+                const user = await collection.findOne({ email });
+
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ donations: user.donations }));
+
+            } catch (error) {
+                res.writeHead(500, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ error: error.message }));
+            } finally {
+                await client.close();
+            }
+        })();
+    } 
+    else if (path == "/useCredit" && req.method == "GET") {
+        (async () => {
+            const client = new MongoClient(connStr);
+
+            try {
+                await client.connect();
+                const db = client.db("secondhand-db");
+                const collection = db.collection("users");
+
+                // get the user and their new amount of donation credits to update
+                const donations = Math.round(parseFloat(urlObj.query.donations));
+                const email = urlObj.query.email;
+
+                const user = await collection.findOne({ email });
+
+                await collection.updateOne({ email: email }, { $set: {donations: donations}});
+                await collection.updateOne({ email: email }, { $set: {credits: donations}});
+
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ success: true }));
+            } catch (error) {
+                res.writeHead(500, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({ error: error.message }));
+            } finally {
+                await client.close();
+            }
+        })();
+    }
+    // remove books in cart from our library
+    else if (path == "/updateLibrary" && req.method == "GET") {
+        (async () => {
+        const client = new MongoClient(connStr);
+        try {
+            await client.connect();
+            const db = client.db("secondhand-db");
+            const collection = db.collection("books");
+
+            const title = urlObj.query.title;
+
+            // search for book then remove it
+            const book = await db.collection("books").findOne({ title: title });
+
+            if (!book) {
+                res.writeHead(404);
+                return res.end("Book not found");
+            }
+
+            await collection.deleteOne({ title: title });
+
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ success: true }));
+        } catch (err) {
+            res.writeHead(500);
+            res.end("Database Error: " + err.message);
+        } finally {
+            await client.close();
+        }
+    })();
+    }
+    // process the checkout via stripe
+    else if (path == "/processCheckout" && req.method == "GET") {
+        (async () => {
+            try {
+                const totalItems = parseInt(urlObj.query.totalItems);
+
+                // NOTE: this is the stripe checkout blueprint, provided by stripe (they do price in cents for some reason)
+                const session = await stripe.checkout.sessions.create({
+                    line_items: [
+                    {
+                        price_data: {
+                            currency: 'usd',
+                            unit_amount: 500,
+                            product_data: {
+                                name: 'book',
+                                description: 'Enjoy your read!',
+                            },
+                        },
+                        quantity: totalItems,
+                    },
+                  ],
+                  mode: 'payment',
+
+                  // landing pages for after payment
+                  success_url: 'https://my-vers-secondhand-stories-030008331aee.herokuapp.com/home',
+                  cancel_url: 'https://my-vers-secondhand-stories-030008331aee.herokuapp.com/cart',
+                });
+
+                // return the unique checkout link stripe creates for each purchase (auto loaded in front end)
+                res.writeHead(200, { "Content-Type": "application/json" });
+                res.end(JSON.stringify({stripeURL: session.url}));
+            } catch (error) {
+                res.writeHead(500, { "Content-Type": "application/json" });
+                res.end(res.end(JSON.stringify({ error: error.message })));
+            }
+        })();
+    }
   // Load the home page
   else if (path == "/catalog") {
     (async () => {
