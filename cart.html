@@ -10,11 +10,11 @@
     />
 
     <style>
-        * {
+        /* * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
+        } */
 
         body {
             background: #E9EED9;
@@ -69,15 +69,6 @@
             font-size: 13px;
             color: #7a6a5a;
             margin-top: 4px;
-        }
-
-        .empty-cart {
-            text-align: center;
-            padding: 50px 20px;
-            background: #fcf9ef;
-            border-radius: 16px;
-            color: #8b7355;
-            font-style: italic;
         }
 
         /* summary section */
@@ -227,7 +218,7 @@
             
             // display if cart is empty
             if (items.length === 0) {
-                container.innerHTML = `<div class="empty-cart">Your cart is empty.<br>Add some great books from the store!</div>`;
+                container.innerHTML = `<div style='text-align: center'>Your cart is empty.<br>Add some great books from the store!</div>`;
                 document.getElementById('subtotalValue').innerText = '$0.00';
                 document.getElementById('discountValue').innerText = '-$0.00';
                 document.getElementById('taxValue').innerText = '$0.00';
