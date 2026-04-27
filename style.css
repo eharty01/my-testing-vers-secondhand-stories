@@ -113,23 +113,19 @@ body {
 }
 
 .circle {
-  border-radius: 100px;
+  border-radius: 50%;
   width: 55px;
   height: 55px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(#FFB703);
-  box-shadow: var(#E9EED9) 0px 2px 4px;
   cursor: pointer;
 }
 
 .circle:hover {
   background-color: var(#1B4332);
 }
-
-
-
 
 footer {
     width: 100%;
@@ -252,8 +248,106 @@ input {
     padding: 5px;
 }
 
+/* migrated cart styles */
+/* book list styles */
+        .cart-items {
+            margin: 20px 0;
+            width: 80%;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee8da;
+        }
+
+        .book-details {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex: 2;
+            text-align: left;
+        }
+
+        .book-title {
+            font-weight: 600;
+            color: #1e3a2f;
+        }
+
+        .book-author {
+            font-size: 13px;
+            color: #7a6a5a;
+            margin-top: 4px;
+        }
+
+        /* summary section */
+        .summary {
+            width: 80%;
+            margin-top: 25px;
+            background: #fafaf5;
+            padding: 20px 20px;
+            border-radius: 16px;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 16px;
+        }
+
+        .total-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0 8px;
+            font-size: 20px;
+            font-weight: bold;
+            border-top: 2px solid #d4e2ca;
+            margin-top: 8px;
+            color: #1B4332;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: 30px;
+        }
+
+        .clear-btn {
+            background-color: #f0e2d0;
+            color: #7c4a2b;
+        }
+
+        .clear-btn:hover {
+            background-color: #961d0f;
+        }
+
+        .checkout-btn {
+            background-color: #2c6e49;
+            color: white;
+        }
+
+        .checkout-btn:hover {
+            background-color: #1B4332;
+        }
+
+        .remove-btn {
+            height: 55px;
+            width: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .description {
+            width: 70%;
+            text-align: center;
+        }
 
 @media (max-width: 768px) {
+
   .navbar {
     position: relative;
   }
@@ -341,7 +435,7 @@ input {
     font-size: 20px !important;
   }
 
-  p {
+  p, div {
     font-size: 14px !important;
   }
 
@@ -361,6 +455,10 @@ input {
 
     .section {
         padding: 20px;
+    }
+
+    .description {
+        width: 90%;
     }
 
 }
