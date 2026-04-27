@@ -285,8 +285,8 @@ var server = http.createServer(function (req, res) {
                     },
                   ],
                   mode: 'payment',
-                  success_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
-                  cancel_url: 'https://dashboard.stripe.com/workbench/blueprints/one-time-payment/checkout-chapter?confirmation-redirect=create-checkout-session',
+                  success_url: 'https://my-vers-secondhand-stories-030008331aee.herokuapp.com/home',
+                  cancel_url: 'https://my-vers-secondhand-stories-030008331aee.herokuapp.com/cart',
                 });
 
                 res.writeHead(200, { "Content-Type": "application/json" });
