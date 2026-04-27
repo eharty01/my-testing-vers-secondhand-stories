@@ -357,7 +357,8 @@
                 await fetch(`/useCredit?${userDonations.toString()}`);
             }
 
-            const cart = localStorage.getItem('shoppingCart');
+            const stored = localStorage.getItem('shoppingCart');
+            const cart = JSON.parse(stored);
             const items = cart.items;
 
             // remove purchased books from collection
