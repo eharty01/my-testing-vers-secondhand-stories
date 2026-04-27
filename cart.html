@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css" />
+     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
 
     <style>
         * {
@@ -242,6 +246,9 @@
                             <div class="book-author">by ${author}</div>
                         </div>
                         <div>$5</div>
+                        <div>
+                            <button onclick="removeItem('${title}')" class="remove-btn"><i class="fa-solid fa-x"></i></i></button>
+                        </div>
                     </div>
                 `;
             }
@@ -305,8 +312,15 @@
                 document.getElementById('donations').innerText = '-$' + availableCredits;
             }
         }
+
+        function removeItem(title) {
+            let cart = JSON.parse(localStorage.getItem('shoppingCart'));
+            cart = cart.filter(item => item.title !== title);
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCart();
+        }
         
-        // Clear all items from cart
         function clearCart() {
             if (itemCount == 0) {
                 alert("Cart is already empty.");
