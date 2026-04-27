@@ -243,6 +243,13 @@ var server = http.createServer(function (req, res) {
 
             const title = urlObj.query.title;
 
+            const book = await db.collection("books").findOne({ title: title });
+
+            if (!book) {
+                res.writeHead(404);
+                return res.end("Book not found");
+            }
+
             await collection.deleteOne({ title: title });
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify({ success: true }));
