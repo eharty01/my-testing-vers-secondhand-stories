@@ -86,7 +86,7 @@
         </div>
 
         <div class="card-footer">
-            <button onclick="addToCart()" class="cart-btn" action="/catalog">Add to Cart</button>
+            <button onclick="addToCart()" class="cart-btn">Add to Cart</button>
         </div>
 
     </div>
@@ -142,6 +142,7 @@
             // save cart to local storage
             localStorage.setItem('shoppingCart', JSON.stringify(cart));
             alert(`${window.currentBook.title} added to cart!`);
+            window.location.href = "./catalog";
         }
     </script>
 </body>

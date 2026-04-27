@@ -348,83 +348,7 @@ input {
         }
 
 @media (max-width: 768px) {
-
-  .navbar {
-    position: relative;
-  }
-
-  .nav-container {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    gap: 12px;
-  }
-
-  .navLinks {
-    display: none;
-  }
-
-  /* Hamburger menu shows up on mobile or any small screen */
-  .navLinks.hamburger {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    align-items: center;
-    gap: 16px;
-    width: 100%;
-    padding: 16px 0px;
-    top: 100%;
-    left: 0px;
-    z-index: 999;
-    background: #1B4332;
-  }
-
-  .circle {
-    display: flex;
-  }
-
-  #toggleBar {
-    display: block;
-    cursor: pointer;
-  }
-
-  h2 {
-    font-size: 1.8rem;
-  }
-
-  .columns {
-    flex-direction: column;
-  }
-
-  .container h1 {
-    width: 100%;
-  }
-
-  .container p {
-    width: 100%;
-  }
-
-
-  .dropdownOptions {
-    display: none;
-  }
-
-  .dropdownOptions {
-    position: static;
-    box-shadow: none;
-    width: 100%;
-    padding: 8px 0;
-  }
-
-  .dropdownOptions.open {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  h1 {
+    h1 {
   font-size: 32px !important;
   }
 
@@ -461,6 +385,83 @@ input {
     .description {
         width: 90%;
     }
+
+    .columns {
+        flex-direction: column;
+    }
+
+    .container h1 {
+        width: 100%;
+    }
+
+    .container p {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1090px) {
+
+  .navbar {
+    position: relative;
+  }
+
+  .nav-container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  /* Hamburger menu shows up on mobile or any small screen */
+  .navLinks.hamburger {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 16px 0px;
+    top: 100%;
+    left: 0px;
+    z-index: 999;
+    background: #1B4332;
+  }
+
+  .circle {
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    padding: 10px;
+  }
+
+  #toggleBar {
+    display: block;
+    cursor: pointer;
+  }
+
+
+  .dropdownOptions {
+    display: none;
+  }
+
+  .dropdownOptions {
+    position: static;
+    box-shadow: none;
+    width: 100%;
+    padding: 8px 0;
+  }
+
+  .dropdownOptions.open {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
 
     /* Hamburger menu shows up on mobile or any small screen */
   .navLinks.hamburger {
@@ -507,7 +508,7 @@ input {
 
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1091px) {
   .navLinks {
     display: flex;
   }
